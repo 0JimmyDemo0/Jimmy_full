@@ -1,8 +1,0 @@
-<launch>
-
- <!-- joy node -->
-   <node respawn="true" pkg="wiimote"  type="wiimote_node.py" name="pure_wii" output="screen"/>
-
-  <node pkg="Jimmy_wm_audio" type="jimmy_teleop" name="teleop"/>
-
-</launch>
