@@ -1,0 +1,46 @@
+#include <ros/ros.h>
+#include <sensor_msgs/Joy.h>
+
+
+class TeleopJy
+{
+public:
+  TeleopJy();
+
+private:
+  void joyCallback(const sensor_msgs::Joy::ConstPtr& joy);
+  
+  ros::NodeHandle nh_;
+
+  ros::Subscriber joy_sub_;
+  
+};
+
+
+TeleopJy::TeleopJy()
+{
+
+  joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 10, &TeleopTurtle::joyCallback, this);
+
+}
+
+void TeleopJy::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
+{
+  vel.angular = a_scale_*joy->axes[angular_];
+  vel.linear = l_scale_*joy->axes[linear_];
+  vel_pub_.publish(vel);
+}
+
+
+int main(int argc, char** argv)
+{
+
+  ros::init(argc, argv, "jimmy_teleop");
+  TeleopJy jimmy_teleop;
+
+  while(1) {
+      ros::spinOnce();
+  }
+
+}
+

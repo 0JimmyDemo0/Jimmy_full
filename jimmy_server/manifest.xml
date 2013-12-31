@@ -1,0 +1,16 @@
+<package>
+  <description brief="jimmy_server">
+
+     jimmy_server
+
+  </description>
+  <author>ILab</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/jimmy_server</url>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+
+</package>
+
+

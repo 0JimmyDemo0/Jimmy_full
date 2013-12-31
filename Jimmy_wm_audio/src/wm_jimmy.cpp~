@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <Jimmy_wm_audio/wm_jimmy.h>
+#include <Jimmy_wm_audio/wm_scripts.h>
+
+using namespace intel_jimmy;
+
+WM_script::WM_script() : capac(UPBND), count(0), cnt_p(42)
+{
+
+	wm_vail[UPBND] = {0};
+
+//	contect[UPBND][SPDIM] = {};
+//	WM_init();
+
+}
+
+const char* WM_script::cur_user = "";
+
+const char* WM_script::video_full_path = "~/workspace/Jmdata/Jimmy_01_";
+const char* WM_script::video_full_sufx = ".mp3";
+const char* WM_script::video_stop_cmmd = "killall mpg123";
+
+const char* WM_script::pic_full_path = "~/workspace/Jmdata/pics/";
+const char* WM_script::pic_full_sufx = ".jpg";
+
+const char* WM_script::text_cont_path = "";
+
+int WM_script::WM_init() {
+	for(int cur = 0; cur < DIM1; ++cur) {
+		strncpy(contect[cur], local_script[cur], DIM2);
+		cur++;
+	}
+	count = DIM1;
+
+	system("gnome-terminal -x roscore");
+	system("rosrun wiimote wiimote_node.py 1> /dev/null 2>&1 &");
+
+	return 0;
+}
+
+int WM_script::WM_add(int idx) {
+	return 0;
+}
+
+int WM_script::WM_del(int idx) {
+	return 0;
+}
+
+int WM_script::WM_clc() {
+	return 0;
+}
+
+void WM_script::WM_update(int idx) {
+	/*  */
+	count = idx;
+}
+
+const char* WM_script::WM_get_audnm(int idx) {	//sys
+	char target[DIMCMD];
+	if(idx < 0 || idx >= count)
+		sprintf(target, "echo [Jimmy::Scrpit::Audio] #Err# Invalid idx [%d].", idx);
+	else
+		sprintf(target, "mpg123 -q %s%s%.02d%s > /dev/null &", video_full_path, cur_user, idx, video_full_sufx);
+	return target;
+}
+
+const char* WM_script::WM_get_txtnm(int idx) { //sys + echo
+	char target[DIMCMD];
+	if(idx < 0 || idx >= count)
+		sprintf(target, "[Jimmy::Scrpit::Text] #Err# Invalid idx [%d].", idx);
+	else
+		sprintf(target, "[Jimmy::Scrpit::Text] %s", contect[idx]);
+	return target;
+}
+
+const char* WM_script::WM_end_audnm() {	//sys
+	char target[DIMCMD];
+	sprintf(target, "%s > /dev/null", video_stop_cmmd);
+	return target;
+}
+
+const char* WM_script::WM_get_vidnm() {
+	char target[DIMCMD];
+	sprintf(target, "fswebcam -q -d /dev/video0 -r 1280x720 --jpeg 88 -D 1 -F 3 %s%s%02d%s &", pic_full_path, cur_user, ++cnt_p, pic_full_sufx);
+	printf("[Jimmy::Info] picture taken!\n");
+	return target;
+}
+
